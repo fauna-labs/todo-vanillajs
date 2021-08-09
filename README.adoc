@@ -30,12 +30,12 @@ todo document, respectively.
   To acquire a secret:
 +
 --
-- Log into the {dashboard}. Sign up if you do not already have an
+. Log into the {dashboard}. Sign up if you do not already have an
   account (it's free!).
 
-- Select, or create, a database.
+. Select, or create, a database.
 
-- In the Security section, create a new key with the "admin" role.
+. In the Security section, create a new key with the "admin" role.
   A secret is shown. Copy that to a safe place; a secret is only
   displayed once.
 --
