@@ -22,7 +22,7 @@ body {
   position: relative;
 }
 
-.todo.done {
+.todo.done .text {
   text-decoration: line-through;
 }
 
@@ -47,6 +47,7 @@ body {
   margin-left: 1rem;
   flex-grow: 1;
   text-align: right;
+  align-self: center;
 }
 
 .todo button {
