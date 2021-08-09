@@ -47,6 +47,12 @@ todo document, respectively.
   locally.
 
 
+Note that once you create a todo, you can visit the {dashboard} and
+navigate to the database associated with the secret, and view the
+"Todos" collection to see the todos. You can manage todo documents in
+the Dashboard; when you refresh the app, you'll see the changes.
+
+
 == Usage
 
 . Clone this repo.
