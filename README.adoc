@@ -1,0 +1,67 @@
+= A Simple Todo App with Fauna
+:fauna: https://fauna.com[Fauna^]
+:fauna-labs: https://github.com/fauna-labs[Fauna Labs^]
+:fauna-org: https://github.com/fauna[Fauna organization^]
+:js-driver: https://github.com/fauna/faunadb-js[Fauna JavaScript driver^]
+:http-server: https://www.npmjs.com/package/http-server[http-server^]
+:dashboard: https://dashboard.fauna.com/[Fauna Dashboard^]
+
+NOTE: This repository contains unofficial patterns, sample code, or
+      tools to help developers build more effectively with {fauna}. All
+      {fauna-labs} repositories are provided "as-is" and without
+      support. By using this repository or its contents, you agree that
+      this repository may never be officially supported and moved to the
+      {fauna-org}.
+
+This repo contains a single-page HTML file with embedded JavaScript that
+implements a simple web-based todo application.
+
+The embedded JavaScript automatically creates a Todos collection and
+then shows any available todos. Use the input field to create a new
+todo. For listed todos, you can toggle their done state or delete them.
+
+Each action triggers a Fauna query that creates, updates, or deletes a
+todo document, respectively.
+
+
+== Dependencies
+
+- A Fauna secret, which authorizes queries for a specific database.
+  To acquire a secret:
++
+--
+- Log into the {dashboard}. Sign up if you do not already have an
+  account (it's free!).
+
+- Select, or create, a database.
+
+- In the Security section, create a new key with the "admin" role.
+  A secret is shown. Copy that to a safe place; a secret is only
+  displayed once.
+--
+
+- {js-driver}: This is fetched from a CDN (you need an internet
+  connection).
+
+- {http-server}: A Node.js web server so you can view the todo app
+  locally.
+
+
+== Usage
+
+. Clone this repo.
+
+. Enter the clone's directory.
+
+. Run `npm i` to install http-server.
+
+. Edit the `index.html` file and on line 18, paste your Fauna secret
+  inside the quotation marks, then save the file.
+
+. Run `npm run serve` to start http-server and view the application in
+  your web browser.
+
+
+== Copyright
+
+Copyright Fauna, Inc. or its affiliates. All rights reserved. SPDX-License-Identifier: MIT-0

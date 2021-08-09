@@ -1,0 +1,52 @@
+/* styles for the single-page Todo app */
+body {
+  font-family: sans-serif;
+  margin: 2rem;
+}
+
+#todo_list {
+  margin-top: 1rem;
+  width: 50%;
+}
+
+.todo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  width: auto;
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  clear: both;
+}
+
+.todo.done {
+  background-color: #999;
+}
+.todo .text {
+  display: inline-block;
+  font-weight: bold;
+  align-self: center;
+}
+
+.todo .date {
+  display: inline-block;
+  color: #ccc;
+  margin-left: 1rem;
+  flex-grow: 1;
+  text-align: right;
+}
+
+.todo button {
+  align-self: flex-start;
+  cursor: pointer;
+}
+
+.todo button.done {
+  margin-right: 1rem;
+}
+
+.todo button.delete {
+  margin-left: 1rem;
+}

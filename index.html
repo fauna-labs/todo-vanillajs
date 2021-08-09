@@ -1,0 +1,188 @@
+<html>
+  <head>
+    <title>Simple Todo App with Fauna</title>
+
+    <!-- Load the Fauna JavaScript driver from a CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/faunadb@latest/dist/faunadb-min.js"></script>
+
+    <!-- Load the page's styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- The todo app logic -->
+    <script>
+// Initial setup
+const faunadb = window.faunadb
+const q = faunadb.query
+
+const client = new faunadb.Client({
+  secret: 'fnADTHyV-ZACDBC9ROEi9kW8DDvL7V4ziOK5m3lH', // paste your secret inside the quotation marks
+})
+
+// On first run, make sure that the Todos collection exists
+;(async () => {
+  await client.query(
+    q.If(
+      q.Exists(q.Collection('Todos')),
+      null,
+      q.CreateCollection({ name: 'Todos' })
+    )
+  )
+  .catch((err) => console.log(err))
+})()
+
+// Add a todo
+const addTodo = async () => {
+  // Fetch the new todo content from the form field
+  const value = document.getElementById('todo').value
+
+  // Store the todo in Fauna
+  await client.query(
+    q.Create(
+      q.Collection('Todos'),
+      { data: { todo: value, done: false } }
+    )
+  )
+  .catch((err) => console.log(err))
+
+  showTodos()
+}
+
+// Mark a todo as done/not_done
+const doneTodo = async (id, done) => {
+  done = (typeof done === 'undefined') ? false : done
+  console.log('Marking', id, 'as done:', done)
+  await client.query(
+    q.Update(
+      q.Ref(q.Collection('Todos'), id),
+      { data: { done: done } }
+    )
+  )
+  .catch((err) => console.log(err))
+
+  showTodos()
+}
+
+
+// Delete a todo from Fauna
+const deleteTodo = async (id) => {
+  await client.query(
+    q.Delete(q.Ref(q.Collection('Todos'), id))
+  )
+  .catch((err) => console.log(err))
+
+  showTodos()
+}
+
+// Fetch the list of todos and show them
+const showTodos = async () => {
+  var todos = await client.query(
+    q.Map(
+      q.Paginate(q.Documents(q.Collection('Todos')), { size: 100 }),
+      q.Lambda('ref', q.Get(q.Var('ref')))
+    )
+  )
+  .then((res) => res.data)
+  .catch((err) => console.log(err))
+
+  const list = document.getElementById('todo_list')
+  // Clear the list of displayed todos
+  list.innerHTML = ''
+
+  todos.forEach((todo) => {
+    // Create a container for the todo's details
+    var div = document.createElement('div')
+    div.className = todo.data.done ? 'todo done' : 'todo'
+    div.setAttribute('id', todo.ref.id)
+    div.setAttribute('data-done', todo.data.done ? 1 : 0)
+
+    // Create a button to mark a todo as done/not done
+    var doneButton = document.createElement('button')
+    doneButton.className = 'done'
+    doneButton.innerHTML = '◯'
+    doneButton.setAttribute('title', 'Click to toggle this todo\'s done state')
+
+    // Add an event handler for done button clicks
+    doneButton.addEventListener('click', async function (e) {
+      e.preventDefault()
+      e.target.disabled = true
+      var id = e.target.parentElement.getAttribute('id')
+      var done = e.target.parentElement.getAttribute('data-done') || false
+      console.log('button click got done', done)
+      done = done > 0 ? false : true
+      console.log('button click to set done', done)
+      await doneTodo(id, done)
+    })
+    div.appendChild(doneButton)
+
+
+    // Create a span to show the todo's text
+    var text = document.createElement('span')
+    text.className = 'text'
+    text.innerHTML = todo.data.todo
+    div.appendChild(text)
+
+    // Create a span to show the todo's timestamp
+    var ts = document.createElement('span')
+    ts.className = 'date'
+    var dt = new Date(todo.ts / 1000).toISOString()
+    ts.innerHTML = dt
+    div.appendChild(ts)
+
+    // Create a button to delete a todo
+    var deleteButton = document.createElement('button')
+    deleteButton.className = 'delete'
+    deleteButton.innerHTML = '🗑'
+    deleteButton.setAttribute('title', 'Click to delete this todo')
+
+    // Add an event handler for delete button clicks
+    deleteButton.addEventListener('click', async function (e) {
+      e.preventDefault()
+      e.target.disabled = true
+      var id = e.target.parentElement.getAttribute('id')
+      await deleteTodo(id)
+    })
+    div.appendChild(deleteButton)
+
+    // Add the todo to the displayed list
+    list.appendChild(div)
+  })
+
+  if (todos.length === 0) {
+    var para = document.createElement('p')
+    para.innerHTML = 'No todos yet. Create one!'
+    list.appendChild(para)
+  }
+
+  // Clear the input field
+  document.getElementById('todo').value = ''
+}
+    </script>
+  </head>
+
+  <body>
+    <h1>Simple Todo App with Fauna</h1>
+
+    <input name="todo" id="todo" placeholder="Enter your todo here"/>
+    <button id="add">Add</button>
+
+    <div id="todo_list"></div>
+    <script>
+// On initial load, show available todos
+showTodos();
+
+// add events to add a todo
+const zField = document.getElementById('todo')
+const addButton = document.getElementById('add')
+
+addButton.addEventListener('click', async function (event) {
+  await addTodo()
+  showTodos()
+})
+
+zField.addEventListener('keyup', async function (event) {
+  event.preventDefault;
+  if (event.keyCode === 13) addButton.click()
+})
+    </script>
+  </body>
+</html>

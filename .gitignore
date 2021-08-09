@@ -1,0 +1,13 @@
+node_modules
+npm-debug.log
+.vscode
+
+# Vim ignores
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+
+# osx
+.DS_Store
+

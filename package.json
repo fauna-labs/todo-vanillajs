@@ -1,0 +1,27 @@
+{
+  "name": "@fauna-labs/todo-vanillajs",
+  "version": "1.0.0",
+  "description": "A single-page Todo app in vanilla JS that uses Fauna to store data.",
+  "keywords": [
+    "fauna",
+    "database",
+    "web",
+    "application",
+    "javascript",
+    "todo"
+  ],
+  "author": "Ewan Edwards",
+  "license": "MIT-0",
+  "main": "index.js",
+  "scripts": {
+    "serve": "node_modules/.bin/http-server . -r -c-1 -g -o",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "http-server": "0.12.3"
+  },
+  "bugs": {
+    "url": "https://github.com/fauna-labs/todo-vanillajs/issues"
+  },
+  "homepage": "https://github.com/fauna-labs/todo-vanillajs#readme"
+}
