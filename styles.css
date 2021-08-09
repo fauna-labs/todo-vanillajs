@@ -19,11 +19,22 @@ body {
   margin-bottom: 0.5rem;
   padding: 0.25rem 0.5rem;
   clear: both;
+  position: relative;
 }
 
 .todo.done {
-  background-color: #999;
+  text-decoration: line-through;
 }
+
+.todo.done::after {
+  content: "✔";
+  position: absolute;
+  top: 0.25rem;
+  right: -2rem;
+  font-size: 1.5rem;
+  color: green;
+}
+
 .todo .text {
   display: inline-block;
   font-weight: bold;
