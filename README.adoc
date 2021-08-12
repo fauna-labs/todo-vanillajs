@@ -23,6 +23,15 @@ todo. For listed todos, you can toggle their done state or delete them.
 Each action triggers a Fauna query that creates, updates, or deletes a
 todo document, respectively.
 
+[IMPORTANT]
+===========
+This code is provided for educational purposes.
+It is simple and it works.
+
+However, embedding database secrets into HTML would be considered bad
+practice for production applications, and you should never do this.
+===========
+
 
 == Dependencies
 
@@ -61,8 +70,8 @@ the Dashboard; when you refresh the app, you'll see the changes.
 
 . Run `npm i` to install http-server.
 
-. Edit the `index.html` file and on line 18, paste your Fauna secret
-  inside the quotation marks, then save the file.
+. Edit the `index.html` file and on line 25, replace the
+  `YOUR_FAUNA_SECRET` text with your Fauna secret, then save the file.
 
 . Run `npm run serve` to start http-server and view the application in
   your web browser.

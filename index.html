@@ -14,8 +14,15 @@
 const faunadb = window.faunadb
 const q = faunadb.query
 
+// Important: This code is provided for educational purposes. It is
+// simple and it works.
+//
+// However, embedding database secrets into HTML would be considered bad
+// practice for production applications, and you should never do this.
 const client = new faunadb.Client({
-  secret: 'fnADTHyV-ZACDBC9ROEi9kW8DDvL7V4ziOK5m3lH', // paste your secret inside the quotation marks
+  // Replace YOUR_FAUNA_SECRET with the secret for the database that
+  // should contain your Todo documents.
+  secret: 'YOUR_FAUNA_SECRET',
 })
 
 // On first run, make sure that the Todos collection exists
@@ -50,11 +57,41 @@ const addTodo = async () => {
 // Mark a todo as done/not_done
 const doneTodo = async (id, done) => {
   done = (typeof done === 'undefined') ? false : done
-  console.log('Marking', id, 'as done:', done)
+
+  // The following query looks a bit complicated, but it:
+  // - avoids trying to update a Todo document unless it exists, AND
+  // - avoids the update unless the update is required.
+  //
+  // These steps prevent problems if another instance of the todo app
+  // (or the Fauna Dashboard) has already made changes to the Todo
+  // document.
   await client.query(
-    q.Update(
-      q.Ref(q.Collection('Todos'), id),
-      { data: { done: done } }
+    q.Let(
+      {
+        todoRef: q.Ref(q.Collection('Todos'), id),
+        todoExists: q.Exists(q.Var('todoRef')),
+        todo: q.If(
+          q.Var('todoExists'),
+          q.Get(q.Var('todoRef')),
+          null
+        )
+      },
+      q.If(
+        q.And(
+          q.Var('todoExists'),
+          q.Not(
+            q.Equals(
+              q.Select(["data", "done"], q.Var('todo')),
+              done
+            )
+          )
+        ),
+        q.Update(
+          q.Ref(q.Collection('Todos'), id),
+          { data: { done: done } }
+        ),
+        null
+      )
     )
   )
   .catch((err) => console.log(err))
@@ -65,8 +102,22 @@ const doneTodo = async (id, done) => {
 
 // Delete a todo from Fauna
 const deleteTodo = async (id) => {
+  // The following query looks a bit complicated, but it:
+  // - avoids trying to delete a Todo document unless it exists
+  // This step prevents problems if another instance of the todo app (or
+  // the Fauna Dashboard) has already deleted the Todo document.
   await client.query(
-    q.Delete(q.Ref(q.Collection('Todos'), id))
+    q.Let(
+      {
+        todoRef: q.Ref(q.Collection('Todos'), id),
+        todoExists: q.Exists(q.Var('todoRef')),
+      },
+      q.If(
+        q.Var('todoExists'),
+        q.Delete(q.Ref(q.Collection('Todos'), id)),
+        null
+      )
+    )
   )
   .catch((err) => console.log(err))
 
@@ -107,9 +158,7 @@ const showTodos = async () => {
       e.target.disabled = true
       var id = e.target.parentElement.getAttribute('id')
       var done = e.target.parentElement.getAttribute('data-done') || false
-      console.log('button click got done', done)
       done = done > 0 ? false : true
-      console.log('button click to set done', done)
       await doneTodo(id, done)
     })
     div.appendChild(doneButton)
