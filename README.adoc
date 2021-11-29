@@ -73,6 +73,14 @@ the Dashboard; when you refresh the app, you'll see the changes.
 . Edit the `index.html` file and on line 25, replace the
   `YOUR_FAUNA_SECRET` text with your Fauna secret, then save the file.
 
+. Below `YOUR_FAUNA_SECRET` that you just updated, edit the `domain`
+  option to match the regiion your DB is contained. 
+* For example:
+** US region group: `db.us.fauna.com`
+** EU region group: `db.eu.fauna.com`
+** Classic region group: `db.fauna.com`
+** Preview: `db.fauna-preview.com`
+  
 . Run `npm run serve` to start http-server and view the application in
   your web browser.
 
