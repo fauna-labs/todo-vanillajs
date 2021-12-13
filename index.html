@@ -23,6 +23,10 @@ const client = new faunadb.Client({
   // Replace YOUR_FAUNA_SECRET with the secret for the database that
   // should contain your Todo documents.
   secret: 'YOUR_FAUNA_SECRET',
+  // Classic DB Domain = 'db.fauna.us';  US Region Domain = 'db.us.fauna.com'; 
+  // See https://docs.fauna.com/fauna/current/learn/understanding/region_groups for Region domain information.
+  domain: 'db.us.fauna.com',  
+  scheme: 'https',
 })
 
 // On first run, make sure that the Todos collection exists
